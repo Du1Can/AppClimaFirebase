@@ -58,13 +58,7 @@ class _MyDetails extends State<Details2> {
         ),
       );
 
-      // Redirige después de 0.5 segundos
-      Future.delayed(Duration(milliseconds: 500), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Cards()),
-        );
-      });
+      Navigator.pop(context); // Regresa conservando la pila de navegación
 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -107,10 +101,7 @@ class _MyDetails extends State<Details2> {
         ),
       );
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => Cards()),
-      );
+      Navigator.pop(context); // Regresa conservando la pila de navegación
 
     } on FirebaseException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -122,30 +113,7 @@ class _MyDetails extends State<Details2> {
       );
     }
   }
-// Función auxiliar para detectar URLs de Firebase Storage
-  bool _esUrlDeFirebaseStorage(String url) {
-    return url.startsWith('gs://') ||
-        url.contains('firebasestorage.googleapis.com');
-  }
 
-// Función auxiliar para eliminar la imagen
-  Future<void> _eliminarImagenDeStorage(String url) async {
-    try {
-      if (url.startsWith('gs://')) {
-        // Formato: gs://bucket-name/path/to/image.jpg
-        final ref = FirebaseStorage.instance.refFromURL(url);
-        await ref.delete();
-      } else {
-        // Formato: https://firebasestorage.googleapis.com/...
-        final path = Uri.parse(url).path;
-        final ref = FirebaseStorage.instance.ref(path);
-        await ref.delete();
-      }
-    } catch (e) {
-      print('Error al eliminar imagen: $e');
-      throw Exception('No se pudo eliminar la imagen');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
